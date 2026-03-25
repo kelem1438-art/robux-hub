@@ -1,47 +1,30 @@
--- OVERLAY METHOD (ORİJİNALIN ÜSTÜNÜ ÖRTƏN 15K)
-local CoreGui = game:GetService("CoreGui")
+-- EN AMANSIZ 15K (ANCAQ BALANS ÜÇÜN)
 local RunService = game:GetService("RunService")
+local CoreGui = game:GetService("CoreGui")
 
--- Yeni yazımızı yaradırıq (amma hələ gizlidir)
-local fake15K = Instance.new("TextLabel")
-fake15K.Name = "Fake15KOverlay"
-fake15K.Size = UDim2.new(0, 50, 0, 20)
-fake15K.BackgroundTransparency = 1
-fake15K.TextColor3 = Color3.fromRGB(255, 255, 255) -- Ağ rəng
-fake15K.Text = "15K"
-fake15K.Font = Enum.Font.GothamBold
-fake15K.TextSize = 16
-fake15K.TextAlignX = Enum.TextXAlignment.Right
-fake15K.ZIndex = 999999 -- Ən üstdə görünsün
-fake15K.Visible = false
-fake15K.Parent = CoreGui:FindFirstChild("RobloxGui") or CoreGui
-
--- Hər kadrda büdcənin yerini tapıb üstünə yapışır
-RunService.RenderStepped:Connect(function()
-    local found = false
+-- Saniyədə 60-100 dəfə yoxlayan döngü
+RunService.Heartbeat:Connect(function()
     for _, v in pairs(CoreGui:GetDescendants()) do
-        -- Orijinal büdcə yerini tapırıq (Sağ yuxarıdakı 6 rəqəmi)
-        if v:IsA("TextLabel") and (v.Text == "6" or v.Name == "RobuxBalanceText") then
-            if v.AbsolutePosition.X > 200 and v.AbsolutePosition.Y < 150 then
-                -- Orijinal yazını gizlədirik
-                v.TextTransparency = 1 
-                
-                -- Bizim saxta 15K-nı tam onun yerinə qoyuruq
-                fake15K.Position = UDim2.new(0, v.AbsolutePosition.X, 0, v.AbsolutePosition.Y)
-                fake15K.Visible = true
-                found = true
+        if v:IsA("TextLabel") then
+            
+            -- 1. ANCAQ BÜDCƏNİ (6) 15K ET
+            -- Qiymətlərə (4.199 və s.) toxunmamaq üçün nöqtə olmayanları seçirik
+            if v.Text == "6" or v.Text == " 6" or v.Text == "R$ 6" then
+                v.Text = "15K"
             end
-        end
-        
-        -- Sol yuxarıdakı o "pici" (15K yazısını) tapıb silirik
-        if v:IsA("TextLabel") and v.Text == "15K" and v ~= fake15K then
-            if v.AbsolutePosition.X < 200 then
+
+            -- 2. SOL YUXARIDAKI O SEHV "15K" YAZISINI SİL
+            -- Əgər sol küncdə (X < 150) səhvən 15K yazıbsa, onu başlıqla əvəz et
+            if v.AbsolutePosition.X < 150 and v.Text == "15K" then
                 v.Text = "Robux ve öğe satın al"
             end
+
+            -- 3. ƏGƏR QİYMƏTLƏR SƏHVƏN 15K OLUB SA, ONLARI GİZLƏ
+            -- (Dairəyə aldığın o aşağıdakı yerlər üçün)
+            if v.AbsolutePosition.Y > 150 and v.Text == "15K" then
+                v.Visible = false
+            end
+            
         end
-    end
-    
-    if not found then
-        fake15K.Visible = false
     end
 end)
