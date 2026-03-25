@@ -1,32 +1,35 @@
--- YALNIZ SAĞ YUXARI BÜDCƏNİ 15K EDƏN SKRİPT
+-- YALNIZ SATIN ALMA PƏNCƏRƏSİ AÇILANDA 15K EDƏN SKRİPT
 local CoreGui = game:GetService("CoreGui")
 
+-- Bu funksiya arxa fonda səssizcə pəncərəni izləyir
 task.spawn(function()
     while true do
-        -- Bütün sistem menyularını skan edirik
-        for _, v in pairs(CoreGui:GetDescendants()) do
-            -- Yalnız yazı elementləri üçün
-            if v:IsA("TextLabel") then
-                
-                -- 1. Əgər yazının adı birbaşa balansla bağlıdırsa (Ən dəqiq yol)
-                if v.Name == "RobuxBalanceText" or v.Name == "RobuxText" or v.Name == "AmountText" then
-                    v.Text = "15K"
-                end
-                
-                -- 2. Əgər yazının içində həm Robux logosu (), həm də 6 rəqəmi varsa
-                if v.Text:find("") and v.Text:find("6") then
-                    v.Text = " 15K"
-                end
-
-                -- 3. Əgər yazı ekranın sağ yuxarı hissəsindədirsə (Şəkildəki yer)
-                -- (Bu, digər qiymət yazıları ilə qarışmaması üçün filtrdir)
-                if v.AbsolutePosition.Y < 200 and v.AbsolutePosition.X > 200 then
-                    if v.Text == "6" then
+        -- Roblox-un "Purchase Prompt" (Satınalma) pəncərəsini axtarırıq
+        local prompt = CoreGui:FindFirstChild("PurchasePrompt") or CoreGui:FindFirstChild("RobloxGui")
+        
+        if prompt then
+            -- Pəncərənin içindəki bütün yazıları yoxlayırıq
+            for _, v in pairs(prompt:GetDescendants()) do
+                if v:IsA("TextLabel") then
+                    
+                    -- Şəkildəki sağ yuxarı küncdəki balansı tapırıq
+                    -- Orijinal rəqəm "6" olanda onu "15K" edirik
+                    if v.Text == "6" or v.Name == "RobuxBalanceText" or v.Name == "RobuxText" then
                         v.Text = "15K"
+                    end
+                    
+                    -- Əgər yanında Robux logosu varsa ( 6), onu da 15K edirik
+                    if v.Text:find("") and v.Text:find("6") then
+                        v.Text = " 15K"
                     end
                 end
             end
         end
-        task.wait(0.1) -- Sürətli yoxlama
+        
+        -- Hər 0.2 saniyədən bir yoxlayır ki, pəncərə açılan kimi dərhal dəyişsin
+        task.wait(0.2)
     end
 end)
+
+-- Qeyd: Skripti işlədəndə heç nə baş verməyəcək. 
+-- Gedib bir əşyaya "Satın Al" basanda dəyişikliyi görəcəksən.
