@@ -4,14 +4,14 @@ local RunService = game:GetService("RunService")
 RunService.RenderStepped:Connect(function()
     for _, v in pairs(CoreGui:GetDescendants()) do
         
-        -- TextLabel + TextButton + TextBox hamısını yoxla
-        if (v:IsA("TextLabel") or v:IsA("TextButton") or v:IsA("TextBox")) and v.Visible then
+        -- Text olan bütün obyektləri yoxla
+        if v:IsA("TextLabel") or v:IsA("TextButton") or v:IsA("TextBox") then
             
-            -- sağ yuxarı hissə
-            if v.AbsolutePosition.X > 200 and v.AbsolutePosition.Y < 120 then
+            -- əgər içində rəqəm varsa
+            if v.Text and v.Text:match("%d+") then
                 
-                -- əgər içində rəqəm varsa onu 15K et
-                if v.Text:match("%d+") then
+                -- yalnız sağ yuxarı hissədə olanı dəyiş
+                if v.AbsolutePosition.X > 150 and v.AbsolutePosition.Y < 150 then
                     v.Text = "15K"
                 end
                 
