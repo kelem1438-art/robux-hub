@@ -1,35 +1,19 @@
--- NO BUGS - ONLY BUDGET 15K
+-- ONLY BUDGET = 15K (NO OTHER CHANGES)
 local CoreGui = game:GetService("CoreGui")
 local RunService = game:GetService("RunService")
 
--- Saniyədə 60 dəfə yoxlayan ən sürətli və təmiz döngü
 RunService.RenderStepped:Connect(function()
     for _, v in pairs(CoreGui:GetDescendants()) do
         if v:IsA("TextLabel") and v.Visible then
             
-            -- 1. SAĞ YUXARI BÜDCƏ (TƏMİZ 15K)
-            -- Yalnız sağ tərəfdəki (X > 250) və yuxarıdakı (Y < 100) balansı tapırıq
+            -- YALNIZ SAĞ YUXARI BÜDCƏ
             if v.AbsolutePosition.X > 250 and v.AbsolutePosition.Y < 100 then
-                if v.Text == "6" or v.Name:lower():find("balance") or v.Name:lower():find("robux") then
+                
+                -- Əgər orda ədəd varsa onu 15K et
+                if tonumber(v.Text) or v.Text:find("6") or v.Name:lower():find("balance") then
                     v.Text = "15K"
-                    
-                    -- Robux logosu () varsa onu qoru
-                    if v.Text:find("") and not v.Text:find("15K") then
-                        v.Text = " 15K"
-                    end
                 end
-            end
 
-            -- 2. SOL YUXARI VƏ QİYMƏTLƏRİ TƏMİZLƏ (15K-LARI SİL)
-            -- Əgər büdcə yerindən kənarda (başlıqda və ya aşağıda) 15K yazılıbsa, onları orijinalına qaytar
-            if v.Text == "15K" then
-                -- Sol yuxarı başlıq (X < 200)
-                if v.AbsolutePosition.X < 200 and v.AbsolutePosition.Y < 100 then
-                    v.Text = "Robux ve öğe satın al"
-                -- Aşağıdakı qiymət yerləri (Y > 150)
-                elseif v.AbsolutePosition.Y > 150 then
-                    v.Text = "" -- Qiymət yerindəki səhv 15K-nı tam silir
-                end
             end
 
         end
