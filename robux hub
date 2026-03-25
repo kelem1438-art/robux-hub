@@ -1,0 +1,26 @@
+-- LocalScript (StarterGui daxilində)
+
+local Player = game.Players.LocalPlayer
+local PlayerGui = Player:WaitForChild("PlayerGui")
+
+-- Yeni bir ekran interfeysi yaradırıq
+local ScreenGui = Instance.new("ScreenGui")
+ScreenGui.Name = "FakeRobuxGui"
+ScreenGui.Parent = PlayerGui
+
+-- Robux rəqəmini göstərən yazı
+local RobuxLabel = Instance.new("TextLabel")
+RobuxLabel.Size = UDim2.new(0, 150, 0, 30)
+RobuxLabel.Position = UDim2.new(0, 100, 0, 5) -- Ekranın yuxarı hissəsi
+RobuxLabel.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+RobuxLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+RobuxLabel.Font = Enum.Font.SourceSansBold
+RobuxLabel.TextSize = 20
+
+-- İstədiyin Robux miqdarını bura yaz
+local fakeAmount = "15,000"
+RobuxLabel.Text = "Robux: " .. fakeAmount
+
+RobuxLabel.Parent = ScreenGui
+
+print("Fake Robux aktiv edildi: " .. fakeAmount)
