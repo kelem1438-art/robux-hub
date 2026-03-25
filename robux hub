@@ -1,26 +1,36 @@
--- Roblox Orijinal Satınalma Menyusunda Saxta Robux Göstərmə
-local CoreGui = game:GetService("CoreGui")
+-- Robux Visual Spoofer (Daha güclü versiya)
 local Players = game:GetService("Players")
+local CoreGui = game:GetService("CoreGui")
 local Player = Players.LocalPlayer
 
--- Robux miqdarını hər saniyə yoxlayıb dəyişən funksiya
-task.spawn(function()
-    while task.wait(0.5) do
-        -- Roblox-un öz menyusunun içindəki Robux yazılarını tapırıq
-        for _, v in pairs(CoreGui:GetDescendants()) do
-            if v:IsA("TextLabel") then
-                -- Əgər yazı balansı göstərirsə (məsələn şəkildəki "6")
-                if v.Text == tostring(Player.AccountAge) or v.Text == "6" or v.Name == "RobuxBalance" or v.Name == "RobuxText" then
-                    v.Text = "15,000"
-                end
-                
-                -- Şəkildəki sağ yuxarı küncdəki Robux ikonu yanındakı rəqəm üçün
-                if v.Parent and v.Parent.Name == "RobuxBalanceFrame" then
-                    v.Text = "15,000"
-                end
+-- Saxta miqdar
+local fakeAmount = "15,000"
+
+-- Bütün yazıları yoxlayan və dəyişən funksiya
+local function updateRobux()
+    -- Həm oyunun içindəki, həm də Roblox-un rəsmi menyusundakı (CoreGui) elementlər
+    local allElements = {}
+    
+    -- CoreGui və PlayerGui-ni birləşdirib yoxlayırıq
+    for _, v in pairs(CoreGui:GetDescendants()) do table.insert(allElements, v) end
+    for _, v in pairs(Player:WaitForChild("PlayerGui"):GetDescendants()) do table.insert(allElements, v) end
+
+    for _, v in pairs(allElements) do
+        if v:IsA("TextLabel") or v:IsA("TextBox") or v:IsA("TextButton") then
+            -- Əgər yazı sənin hazırkı balansındırsa (məsələn 6)
+            if v.Text == "6" or v.Text == "R$ 6" or v.Name:lower():find("robux") then
+                v.Text = fakeAmount
             end
         end
     end
+end
+
+-- Davamlı olaraq arxa fonda işləyir
+task.spawn(function()
+    while true do
+        updateRobux()
+        task.wait(0.1) -- Hər 0.1 saniyədən bir yoxlayır ki, rəqəm geri qayıtmasın
+    end
 end)
 
-print("Satınalma menyusu üçün 15k Robux vizualı aktiv edildi!")
+print("Robux Vizualı 15k olaraq məcburi şəkildə aktiv edildi!")
