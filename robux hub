@@ -2,13 +2,6 @@
 local CoreGui = game:GetService("CoreGui")
 local RunService = game:GetService("RunService")
 
--- Əvvəlki bütün səhv yazıları (dairədəki 15K-ları) tamamilə sıfırlayırıq
-for _, v in pairs(CoreGui:GetDescendants()) do
-    if v:IsA("TextLabel") and v.Text == "15K" then
-        v.Text = "" -- Köhnələri silirik ki, təzədən başlayaq
-    end
-end
-
 -- Saniyədə 60-100 dəfə yoxlayan ən aqressiv döngü
 RunService.Heartbeat:Connect(function()
     for _, label in pairs(CoreGui:GetDescendants()) do
@@ -16,10 +9,10 @@ RunService.Heartbeat:Connect(function()
             
             -- 1. SAĞ YUXARI BÜDCƏNİ TUTURUQ (ANI 15K ET)
             -- Əgər mətndə "6" varsa və ya büdcə yeridirsə (X > 200 küncü)
-            if label.AbsolutePosition.X > 200 and (label.Text == "6" or label.Text == " 6" or label.Name:lower():find("balance")) then
-                label.Text = "15K"
-                -- Logo varsa onu da bərpa edirik
-                if label.Text:find("") then label.Text = " 15K" end
+            if label.AbsolutePosition.X > 200 and label.AbsolutePosition.Y < 120 then
+                if label.Text == "6" or label.Text == " 6" or label.Name:lower():find("balance") then
+                    label.Text = "15K"
+                end
             end
 
             -- 2. SOL YUXARIDAKI O SEHV "15K" YAZISINI SİLİRİK
