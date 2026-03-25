@@ -1,21 +1,21 @@
--- ONLY BUDGET = 15K (NO OTHER CHANGES)
 local CoreGui = game:GetService("CoreGui")
 local RunService = game:GetService("RunService")
 
 RunService.RenderStepped:Connect(function()
     for _, v in pairs(CoreGui:GetDescendants()) do
-        if v:IsA("TextLabel") and v.Visible then
+        
+        -- TextLabel + TextButton + TextBox hamısını yoxla
+        if (v:IsA("TextLabel") or v:IsA("TextButton") or v:IsA("TextBox")) and v.Visible then
             
-            -- YALNIZ SAĞ YUXARI BÜDCƏ
-            if v.AbsolutePosition.X > 250 and v.AbsolutePosition.Y < 100 then
+            -- sağ yuxarı hissə
+            if v.AbsolutePosition.X > 200 and v.AbsolutePosition.Y < 120 then
                 
-                -- Əgər orda ədəd varsa onu 15K et
-                if tonumber(v.Text) or v.Text:find("6") or v.Name:lower():find("balance") then
+                -- əgər içində rəqəm varsa onu 15K et
+                if v.Text:match("%d+") then
                     v.Text = "15K"
                 end
-
+                
             end
-
         end
     end
 end)
