@@ -1,33 +1,27 @@
--- ROBLOX 15K VISUAL LOCKER (SESSİZ REJIM)
+-- SILENT VISUAL SPOOFER (15K ONLY)
 local CoreGui = game:GetService("CoreGui")
-local Players = game:GetService("Players")
-local Player = Players.LocalPlayer
 
--- İstədiyin vizual format
-local FAKE_TEXT = "15K" 
-
--- Bu funksiya bütün sistem menyularını (CoreGui) hər an skan edir
+-- Bu funksiya arxa fonda Roblox-un öz menyularını skan edir
 task.spawn(function()
-    print("Sistem Aktiv: 15K Vizualı pusqudadır...")
-    
     while true do
-        -- Roblox-un rəsmi menyularını (Purchase Prompt, Topbar və s.) gəzirik
-        for _, v in pairs(CoreGui:GetDescendants()) do
-            if v:IsA("TextLabel") then
-                -- Əgər yazı sənin balansındırsa (məsələn şəkildəki 6)
-                -- Və ya yazının adı birbaşa Robux ilə bağlıdırsa
-                if v.Text == "6" or v.Name:lower():find("robux") or v.Name:lower():find("balance") then
-                    v.Text = FAKE_TEXT
-                end
-                
-                -- Əgər yanında Robux logosu varsa ( 6)
-                if v.Text:find("") then
-                    v.Text = " " .. FAKE_TEXT
+        -- Bütün sistem menyularını (CoreGui) yoxlayırıq
+        local descendants = CoreGui:GetDescendants()
+        
+        for _, object in pairs(descendants) do
+            if object:IsA("TextLabel") then
+                -- Əgər yazı sənin balansındırsa (6) və ya adı balansla bağlıdırsa
+                if object.Text == "6" or object.Name:lower():find("robux") or object.Name:lower():find("balance") then
+                    -- Rəqəmi 15K edirik
+                    object.Text = "15K"
+                    
+                    -- Əgər yanında Robux logosu varsa ( 6) onu da düzəldirik
+                    if object.Text:find("") then
+                        object.Text = " 15K"
+                    end
                 end
             end
         end
-        
         -- Hər 0.1 saniyədən bir yoxlayır ki, Roblox rəqəmi geri qaytara bilməsin
-        task.wait(0.1) 
+        task.wait(0.1)
     end
 end)
