@@ -1,60 +1,36 @@
--- PERFECT 15K SPOOFER (CLEANED ALL BUGGED TEXTS)
+-- FINAL NUCLEAR 15K SPOOFER (SÖYÜŞSÜZ VERSİYA)
 local CoreGui = game:GetService("CoreGui")
 local RunService = game:GetService("RunService")
 
--- Əvvəlki qalıqlar varsa tam təmizləyirik
-local function cleanOld()
-    local descendants = CoreGui:GetDescendants()
-    for _, v in pairs(descendants) do
-        if v:IsA("TextLabel") and v.Text == "15K" and v.Visible then
-            -- Bütün səhv 15K-ları gizlədirik ki, təzədən başlayaq
-            v.Visible = false
-        end
-    end
-end
-cleanOld()
-
--- Ani və tam fokuslanmış dəyişiklik döngüsü
+-- Hər kadrda (saniyədə 60 dəfə) yoxlayan ən sürətli döngü
 RunService.RenderStepped:Connect(function()
-    local descendants = CoreGui:GetDescendants()
-    
-    for _, label in pairs(descendants) do
-        if label:IsA("TextLabel") and label.Visible then
-            local posX = label.AbsolutePosition.X
-            local posY = label.AbsolutePosition.Y
-
-            -- 1. SAĞ YUXARI BÜDCƏ (TƏMİZ 15K) - ANI DƏYİŞİM
-            -- Yalnız sağ küncdəki (X > 200) və yuxarıdakı (Y < 120) büdcə yerini hədəf alırıq
-            if posX > 200 and posY < 120 then
-                -- Orijinal balans (6) və ya balansla bağlı digər yazılar
-                if label.Text == "6" or label.Name:lower():find("robux") or label.Name:lower():find("balance") then
-                    label.Text = "15K"
-                end
-                
-                -- Robux logosu () varsa onu da qoruyuruq
-                if label.Text:find("") and not label.Text:find("15K") then
-                    label.Text = " 15K"
-                end
-            end
-
-            -- 2. ŞƏKİLDƏ DAİRƏYƏ ALDIĞIN SƏHV YAZILARI SİL (ORİJİNALA QAYTAR)
-
-            -- Sol Yuxarı Başlıq (Dairədəki "15K")
-            if posX < 150 and posY < 120 and label.Text == "15K" then
-                label.Text = "Robux ve öğe satın al" -- Orijinal başlığı bərpa edirik
-            end
+    for _, v in pairs(CoreGui:GetDescendants()) do
+        if v:IsA("TextLabel") and v.Visible then
             
-            -- Pəncərənin adı (Əgər başqa başlıq yeridirsə)
-            if label.Name == "HeaderText" and label.Text == "15K" then
-                label.Text = "Robux ve öğe satın al"
+            -- 1. SOL YUXARIDAKI "15K" YAZISINI (PİCİ) TAM SİL
+            -- Əgər bu yazı başlığın içindədirsə və ya sol küncdədirsə
+            if (v.Name == "HeaderText" or v.AbsolutePosition.X < 150) and v.Text == "15K" then
+                v.Text = "Robux ve öğe satın al" -- Orijinal başlığı bərpa et
             end
 
-            -- Qiymət bölmələri (Dairədəki sol və sağ qiymətlər)
-            -- Qiymət yazıları adətən nöqtə (.), vergül (,) və ya pul simvolu ($) ilə gəlir
-            if (label.Text:find("%.") or label.Text:find(",") or label.Text:find("$")) and label.Text:find("15K") then
-                -- Əgər səhvən qiymət yerinə "15K" yazıbsa, onu təmizləyirik (görünməz edirik)
-                -- Orijinal qiymətləri skript özü oxuya bilmir, amma səhv "15K" yazısını gizlədə bilərik
-                label.Text = "" 
+            -- 2. AŞAĞIDAKİ QİYMƏT DAİRƏLƏRİNDƏKİ "15K"-LARI SİL
+            -- Qiymət yerlərində (ekranın aşağı hissəsində) səhvən 15K çıxıbsa
+            if v.AbsolutePosition.Y > 150 and v.Text == "15K" then
+                v.Visible = false -- O səhv dairələri tamamilə görünməz et
+            end
+
+            -- 3. SAĞ YUXARI BÜDCƏNİ (ANI 15K ET)
+            -- Yalnız sağ küncdəki təmiz balans yerini tapırıq
+            if v.AbsolutePosition.X > 250 and v.AbsolutePosition.Y < 120 then
+                -- Əgər orada orijinal balansın (6) və ya balans yazısı varsa
+                if v.Text == "6" or v.Name:lower():find("balance") or v.Name:lower():find("robux") then
+                    v.Text = "15K"
+                    
+                    -- Robux logosu () varsa onu da qoru
+                    if v.Text:find("") and not v.Text:find("15K") then
+                        v.Text = " 15K"
+                    end
+                end
             end
             
         end
