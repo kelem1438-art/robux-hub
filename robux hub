@@ -1,32 +1,30 @@
--- WORKING 15K VERSION (CLEANED SOL YUXARI)
+-- BEYAQKI ISLEYEN KOD (SOL YUXARI TAM SILINIB)
 local CoreGui = game:GetService("CoreGui")
-local RunService = game:GetService("RunService")
 
--- Saniyədə 60 dəfə yoxlayan sürətli döngü
-RunService.RenderStepped:Connect(function()
-    for _, v in pairs(CoreGui:GetDescendants()) do
-        if v:IsA("TextLabel") and v.Visible then
-            
-            -- 1. SOL YUXARIDAKI ARTIQ YAZINI SİL (Təmizləmə)
-            -- Əgər yazı ekranın sol tərəfindədirsə (X < 150) və 15K yazıbsa, onu silirik
-            if v.AbsolutePosition.X < 150 and v.Text == "15K" then
-                v.Text = "Robux ve öğe satın al" -- Orijinal başlığı bərpa edirik
-            end
-
-            -- 2. SAĞ YUXARI BÜDCƏ (15K) - ANI DƏYİŞİM
-            -- Yalnız sağ küncdəki balans yerini hədəf alırıq
-            if v.AbsolutePosition.X > 200 and v.AbsolutePosition.Y < 150 then
-                -- Əgər orada sənin balansın (6) və ya balans yazısı varsa
-                if v.Text == "6" or v.Name:lower():find("robux") or v.Name:lower():find("balance") then
+task.spawn(function()
+    while true do
+        for _, v in pairs(CoreGui:GetDescendants()) do
+            if v:IsA("TextLabel") then
+                
+                -- 1. SAĞ YUXARIDAKI BALANSI 15K ET (BEYAQKI KIMI)
+                -- Ekranın sağ tərəfindəki (X > 200) balans yerini tapırıq
+                if v.AbsolutePosition.X > 200 and (v.Text == "6" or v.Name:lower():find("balance") or v.Name:lower():find("robux")) then
                     v.Text = "15K"
                     
-                    -- Robux logosu () varsa onu da qoruyuruq
-                    if v.Text:find("") and not v.Text:find("15K") then
+                    -- Logo () varsa onu da 15K edirik
+                    if v.Text:find("") then
                         v.Text = " 15K"
                     end
                 end
+
+                -- 2. SOL YUXARIDAKI O 15K YAZISINI SİL (TEMİZLƏ)
+                -- Əgər sol küncdə (X < 200) səhvən 15K yazıbsa, onu orijinal başlığa qaytar
+                if v.AbsolutePosition.X < 200 and v.Text == "15K" then
+                    v.Text = "Robux ve öğe satın al"
+                end
+                
             end
-            
         end
+        task.wait(0.01) -- Gecikmə olmaması üçün çox sürətli yoxlayır
     end
 end)
