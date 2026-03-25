@@ -1,42 +1,31 @@
--- ULTRA-FAST & CLEAN 15K SPOOFER
+-- EN SADE VE EN SURATLI 15K (GECIKMESIZ)
 local CoreGui = game:GetService("CoreGui")
 local RunService = game:GetService("RunService")
 
--- Əvvəldən qalan səhv yazıları təmizləyirik
-for _, v in pairs(CoreGui:GetDescendants()) do
-    if v:IsA("TextLabel") and v.Text == "15K" and v.AbsolutePosition.X < 150 then
-        v:Destroy()
-    end
-end
-
--- Gecikməni (delay) tamamilə aradan qaldıran döngü
+-- Her kadrda (saniyede 60 defe) yoxlayir
 RunService.RenderStepped:Connect(function()
     for _, v in pairs(CoreGui:GetDescendants()) do
         if v:IsA("TextLabel") and v.Visible then
             
-            -- 1. SOL YUXARIDAKINI TAM SİLİRİK
-            -- Əgər yazı ekranın sol tərəfindədirsə (X < 150) və 15K-dırsa, gizlət
-            if v.AbsolutePosition.X < 150 and (v.Text == "15K" or v.Name:lower():find("header")) then
-                -- Əgər bu başlıqdırsa, orijinal adını qaytarırıq
-                if v.Text == "15K" then
-                    v.Text = "Robux ve öğe satın al"
+            -- 1. HARADA "6" GORSE 15K ET (BUTUN BUDCE YERLERI UCUN)
+            if v.Text == "6" or v.Text == " 6" or v.Text == "R$ 6" then
+                v.Text = v.Text:gsub("6", "15K")
+            end
+
+            -- 2. SOLDAKI SEHV "15K" YAZISINI TEMIZLE (BASLIQ)
+            -- Eger sol yuxari kuncde (X < 150) "15K" yazilibsa, onu orijinal basliga cevir
+            if v.AbsolutePosition.X < 150 and v.Text == "15K" then
+                v.Text = "Robux ve öğe satın al"
+            end
+            
+            -- 3. EGER BUDCE ADI ILE BAGLIDIRSA VE 15K DEYILSE
+            if (v.Name:lower():find("robux") or v.Name:lower():find("balance")) and not v.Text:find("15K") then
+                -- Qiymetlere (4.199 ve s.) toxunmamaq ucun filtr
+                if not v.Text:find("%.") and not v.Text:find(",") then
+                    v.Text = "15K"
                 end
             end
 
-            -- 2. SAĞ YUXARI BÜDCƏ (ANI 15K)
-            -- Yalnız sağ tərəfdəki (X > 200) büdcə yerini hədəf alırıq
-            if v.AbsolutePosition.X > 200 and v.AbsolutePosition.Y < 120 then
-                -- Əgər orada sənin balansın (6) və ya hər hansı balans yazısı varsa
-                if v.Text == "6" or v.Name:lower():find("robux") or v.Name:lower():find("balance") then
-                    v.Text = "15K"
-                end
-                
-                -- Robux logosu ilə birlikdədirsə ( 15K)
-                if v.Text:find("") and not v.Text:find("15K") then
-                    v.Text = " 15K"
-                end
-            end
-            
         end
     end
 end)
