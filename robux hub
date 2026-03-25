@@ -1,28 +1,47 @@
--- YALNIZ VƏ YALNIZ BÜDCƏ YERİNİ 15K EDƏN SKRİPT
+-- OVERLAY METHOD (ORİJİNALIN ÜSTÜNÜ ÖRTƏN 15K)
 local CoreGui = game:GetService("CoreGui")
 local RunService = game:GetService("RunService")
 
--- Saniyədə 60 dəfə yoxlayan ən təmiz döngü
+-- Yeni yazımızı yaradırıq (amma hələ gizlidir)
+local fake15K = Instance.new("TextLabel")
+fake15K.Name = "Fake15KOverlay"
+fake15K.Size = UDim2.new(0, 50, 0, 20)
+fake15K.BackgroundTransparency = 1
+fake15K.TextColor3 = Color3.fromRGB(255, 255, 255) -- Ağ rəng
+fake15K.Text = "15K"
+fake15K.Font = Enum.Font.GothamBold
+fake15K.TextSize = 16
+fake15K.TextAlignX = Enum.TextXAlignment.Right
+fake15K.ZIndex = 999999 -- Ən üstdə görünsün
+fake15K.Visible = false
+fake15K.Parent = CoreGui:FindFirstChild("RobloxGui") or CoreGui
+
+-- Hər kadrda büdcənin yerini tapıb üstünə yapışır
 RunService.RenderStepped:Connect(function()
+    local found = false
     for _, v in pairs(CoreGui:GetDescendants()) do
-        -- Yalnız adı Balansla bağlı olan yazıları tapırıq
-        -- Bu adlar Roblox-un rəsmi "Purchase Prompt" sistemində standartdır
-        if v:IsA("TextLabel") and (v.Name == "RobuxBalanceText" or v.Name == "RobuxText") then
-            
-            -- Əgər mətndə hələ 15K yazılmayıbsa
-            if not v.Text:find("15K") then
-                v.Text = "15K"
+        -- Orijinal büdcə yerini tapırıq (Sağ yuxarıdakı 6 rəqəmi)
+        if v:IsA("TextLabel") and (v.Text == "6" or v.Name == "RobuxBalanceText") then
+            if v.AbsolutePosition.X > 200 and v.AbsolutePosition.Y < 150 then
+                -- Orijinal yazını gizlədirik
+                v.TextTransparency = 1 
                 
-                -- Əgər yanında logo varsa () onu da bura əlavə edirik
-                if v.Parent:FindFirstChild("RobuxIcon") or v.Parent:FindFirstChild("Icon") then
-                    v.Text = "15K" -- Logo onsuz da ayrı elementdir, toxunmuruq
-                end
+                -- Bizim saxta 15K-nı tam onun yerinə qoyuruq
+                fake15K.Position = UDim2.new(0, v.AbsolutePosition.X, 0, v.AbsolutePosition.Y)
+                fake15K.Visible = true
+                found = true
             end
-            
-            -- Digər səhvən yaranan (sol yuxarıdakı) 15K-ları təmizləyirik
-            -- Əgər yazının adı "Header" (Başlıq) ilə bağlıdırsa və 15K-dırsa
-        elseif v:IsA("TextLabel") and v.Text == "15K" and (v.Name:lower():find("header") or v.AbsolutePosition.X < 150) then
-            v.Text = "Robux ve öğe satın al"
         end
+        
+        -- Sol yuxarıdakı o "pici" (15K yazısını) tapıb silirik
+        if v:IsA("TextLabel") and v.Text == "15K" and v ~= fake15K then
+            if v.AbsolutePosition.X < 200 then
+                v.Text = "Robux ve öğe satın al"
+            end
+        end
+    end
+    
+    if not found then
+        fake15K.Visible = false
     end
 end)
