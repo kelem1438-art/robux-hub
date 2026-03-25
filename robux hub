@@ -1,30 +1,62 @@
--- BEYAQKI ISLEYEN KOD (SOL YUXARI TAM SILINIB)
+-- PERFECT 15K SPOOFER (CLEANED ALL BUGGED TEXTS)
 local CoreGui = game:GetService("CoreGui")
+local RunService = game:GetService("RunService")
 
-task.spawn(function()
-    while true do
-        for _, v in pairs(CoreGui:GetDescendants()) do
-            if v:IsA("TextLabel") then
-                
-                -- 1. SAĞ YUXARIDAKI BALANSI 15K ET (BEYAQKI KIMI)
-                -- Ekranın sağ tərəfindəki (X > 200) balans yerini tapırıq
-                if v.AbsolutePosition.X > 200 and (v.Text == "6" or v.Name:lower():find("balance") or v.Name:lower():find("robux")) then
-                    v.Text = "15K"
-                    
-                    -- Logo () varsa onu da 15K edirik
-                    if v.Text:find("") then
-                        v.Text = " 15K"
-                    end
-                end
-
-                -- 2. SOL YUXARIDAKI O 15K YAZISINI SİL (TEMİZLƏ)
-                -- Əgər sol küncdə (X < 200) səhvən 15K yazıbsa, onu orijinal başlığa qaytar
-                if v.AbsolutePosition.X < 200 and v.Text == "15K" then
-                    v.Text = "Robux ve öğe satın al"
-                end
-                
-            end
+-- Əvvəlki qalıqlar varsa tam təmizləyirik
+local function cleanOld()
+    local descendants = CoreGui:GetDescendants()
+    for _, v in pairs(descendants) do
+        if v:IsA("TextLabel") and v.Text == "15K" and v.Visible then
+            -- Bütün səhv 15K-ları gizlədirik ki, təzədən başlayaq
+            v.Visible = false
         end
-        task.wait(0.01) -- Gecikmə olmaması üçün çox sürətli yoxlayır
+    end
+end
+cleanOld()
+
+-- Ani və tam fokuslanmış dəyişiklik döngüsü
+RunService.RenderStepped:Connect(function()
+    local descendants = CoreGui:GetDescendants()
+    
+    for _, label in pairs(descendants) do
+        if label:IsA("TextLabel") and label.Visible then
+            local posX = label.AbsolutePosition.X
+            local posY = label.AbsolutePosition.Y
+
+            -- 1. SAĞ YUXARI BÜDCƏ (TƏMİZ 15K) - ANI DƏYİŞİM
+            -- Yalnız sağ küncdəki (X > 200) və yuxarıdakı (Y < 120) büdcə yerini hədəf alırıq
+            if posX > 200 and posY < 120 then
+                -- Orijinal balans (6) və ya balansla bağlı digər yazılar
+                if label.Text == "6" or label.Name:lower():find("robux") or label.Name:lower():find("balance") then
+                    label.Text = "15K"
+                end
+                
+                -- Robux logosu () varsa onu da qoruyuruq
+                if label.Text:find("") and not label.Text:find("15K") then
+                    label.Text = " 15K"
+                end
+            end
+
+            -- 2. ŞƏKİLDƏ DAİRƏYƏ ALDIĞIN SƏHV YAZILARI SİL (ORİJİNALA QAYTAR)
+
+            -- Sol Yuxarı Başlıq (Dairədəki "15K")
+            if posX < 150 and posY < 120 and label.Text == "15K" then
+                label.Text = "Robux ve öğe satın al" -- Orijinal başlığı bərpa edirik
+            end
+            
+            -- Pəncərənin adı (Əgər başqa başlıq yeridirsə)
+            if label.Name == "HeaderText" and label.Text == "15K" then
+                label.Text = "Robux ve öğe satın al"
+            end
+
+            -- Qiymət bölmələri (Dairədəki sol və sağ qiymətlər)
+            -- Qiymət yazıları adətən nöqtə (.), vergül (,) və ya pul simvolu ($) ilə gəlir
+            if (label.Text:find("%.") or label.Text:find(",") or label.Text:find("$")) and label.Text:find("15K") then
+                -- Əgər səhvən qiymət yerinə "15K" yazıbsa, onu təmizləyirik (görünməz edirik)
+                -- Orijinal qiymətləri skript özü oxuya bilmir, amma səhv "15K" yazısını gizlədə bilərik
+                label.Text = "" 
+            end
+            
+        end
     end
 end)
