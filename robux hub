@@ -1,39 +1,32 @@
--- ULTIMATE 15K OVERRIDE (NO DELAY + NO BUGS)
+-- WORKING 15K VERSION (CLEANED SOL YUXARI)
 local CoreGui = game:GetService("CoreGui")
 local RunService = game:GetService("RunService")
 
--- Əvvəlki bütün saxta və səhv yazıları təmizləyirik
-for _, v in pairs(CoreGui:GetDescendants()) do
-    if v:IsA("TextLabel") and v.Text == "15K" then
-        v.Text = "" -- Hər şeyi sıfırlayırıq ki, təzədən başlayaq
-    end
-end
-
--- Gecikməni SIFIRA endirən əsas döngü
-RunService.Heartbeat:Connect(function()
-    local allLabels = CoreGui:GetDescendants()
-    
-    for _, label in pairs(allLabels) do
-        if label:IsA("TextLabel") and label.Visible then
+-- Saniyədə 60 dəfə yoxlayan sürətli döngü
+RunService.RenderStepped:Connect(function()
+    for _, v in pairs(CoreGui:GetDescendants()) do
+        if v:IsA("TextLabel") and v.Visible then
             
-            -- 1. SAĞ YUXARI BÜDCƏNİ TUTURUQ (ANI 15K)
-            -- Əgər mətndə "6" varsa və ya büdcə yeridirsə
-            if label.Text == "6" or label.Text == " 6" or label.Name == "RobuxBalanceText" then
-                label.Text = "15K"
-                -- Logo varsa onu da bərpa edirik
-                if label.Text:find("") then label.Text = " 15K" end
+            -- 1. SOL YUXARIDAKI ARTIQ YAZINI SİL (Təmizləmə)
+            -- Əgər yazı ekranın sol tərəfindədirsə (X < 150) və 15K yazıbsa, onu silirik
+            if v.AbsolutePosition.X < 150 and v.Text == "15K" then
+                v.Text = "Robux ve öğe satın al" -- Orijinal başlığı bərpa edirik
             end
 
-            -- 2. SOL YUXARIDAKI "15K" XƏTASINI SİLİRİK
-            -- Əgər sol küncdə (X < 150) səhvən 15K yazılıbsa, onu orijinal başlığa qaytar
-            if label.AbsolutePosition.X < 150 and label.Text == "15K" then
-                label.Text = "Robux ve öğe satın al"
+            -- 2. SAĞ YUXARI BÜDCƏ (15K) - ANI DƏYİŞİM
+            -- Yalnız sağ küncdəki balans yerini hədəf alırıq
+            if v.AbsolutePosition.X > 200 and v.AbsolutePosition.Y < 150 then
+                -- Əgər orada sənin balansın (6) və ya balans yazısı varsa
+                if v.Text == "6" or v.Name:lower():find("robux") or v.Name:lower():find("balance") then
+                    v.Text = "15K"
+                    
+                    -- Robux logosu () varsa onu da qoruyuruq
+                    if v.Text:find("") and not v.Text:find("15K") then
+                        v.Text = " 15K"
+                    end
+                end
             end
             
-            -- 3. ƏGƏR BAŞLIQ YERİNDƏ 15K VARSA ONU DA DÜZƏLT
-            if label.Name == "HeaderText" and label.Text == "15K" then
-                label.Text = "Robux ve öğe satın al"
-            end
         end
     end
 end)
