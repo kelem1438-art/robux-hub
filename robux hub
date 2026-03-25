@@ -1,26 +1,26 @@
--- LocalScript (StarterGui daxilində)
+-- Roblox Orijinal Satınalma Menyusunda Saxta Robux Göstərmə
+local CoreGui = game:GetService("CoreGui")
+local Players = game:GetService("Players")
+local Player = Players.LocalPlayer
 
-local Player = game.Players.LocalPlayer
-local PlayerGui = Player:WaitForChild("PlayerGui")
+-- Robux miqdarını hər saniyə yoxlayıb dəyişən funksiya
+task.spawn(function()
+    while task.wait(0.5) do
+        -- Roblox-un öz menyusunun içindəki Robux yazılarını tapırıq
+        for _, v in pairs(CoreGui:GetDescendants()) do
+            if v:IsA("TextLabel") then
+                -- Əgər yazı balansı göstərirsə (məsələn şəkildəki "6")
+                if v.Text == tostring(Player.AccountAge) or v.Text == "6" or v.Name == "RobuxBalance" or v.Name == "RobuxText" then
+                    v.Text = "15,000"
+                end
+                
+                -- Şəkildəki sağ yuxarı küncdəki Robux ikonu yanındakı rəqəm üçün
+                if v.Parent and v.Parent.Name == "RobuxBalanceFrame" then
+                    v.Text = "15,000"
+                end
+            end
+        end
+    end
+end)
 
--- Yeni bir ekran interfeysi yaradırıq
-local ScreenGui = Instance.new("ScreenGui")
-ScreenGui.Name = "FakeRobuxGui"
-ScreenGui.Parent = PlayerGui
-
--- Robux rəqəmini göstərən yazı
-local RobuxLabel = Instance.new("TextLabel")
-RobuxLabel.Size = UDim2.new(0, 150, 0, 30)
-RobuxLabel.Position = UDim2.new(0, 100, 0, 5) -- Ekranın yuxarı hissəsi
-RobuxLabel.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
-RobuxLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
-RobuxLabel.Font = Enum.Font.SourceSansBold
-RobuxLabel.TextSize = 20
-
--- İstədiyin Robux miqdarını bura yaz
-local fakeAmount = "15,000"
-RobuxLabel.Text = "Robux: " .. fakeAmount
-
-RobuxLabel.Parent = ScreenGui
-
-print("Fake Robux aktiv edildi: " .. fakeAmount)
+print("Satınalma menyusu üçün 15k Robux vizualı aktiv edildi!")
