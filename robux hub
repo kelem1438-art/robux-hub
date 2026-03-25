@@ -1,35 +1,30 @@
--- YALNIZ SATIN ALMA PƏNCƏRƏSİ AÇILANDA 15K EDƏN SKRİPT
+-- FINAL 15K SPOOFER (ONLY ON PURCHASE PROMPT)
 local CoreGui = game:GetService("CoreGui")
 
--- Bu funksiya arxa fonda səssizcə pəncərəni izləyir
+-- Bu funksiya arxa fonda pusquda durur
 task.spawn(function()
     while true do
-        -- Roblox-un "Purchase Prompt" (Satınalma) pəncərəsini axtarırıq
-        local prompt = CoreGui:FindFirstChild("PurchasePrompt") or CoreGui:FindFirstChild("RobloxGui")
-        
-        if prompt then
-            -- Pəncərənin içindəki bütün yazıları yoxlayırıq
-            for _, v in pairs(prompt:GetDescendants()) do
-                if v:IsA("TextLabel") then
+        -- Roblox-un rəsmi interfeysində bütün yazıları gəzirik
+        for _, v in pairs(CoreGui:GetDescendants()) do
+            if v:IsA("TextLabel") then
+                
+                -- Şəkildəki o sağ yuxarıdakı büdcə yerini tapırıq
+                -- Yalnız mətni "6" olan və ya balansla bağlı olan yazıları hədəf alırıq
+                if (v.Text == "6" or v.Name:lower():find("robux") or v.Name:lower():find("balance")) then
                     
-                    -- Şəkildəki sağ yuxarı küncdəki balansı tapırıq
-                    -- Orijinal rəqəm "6" olanda onu "15K" edirik
-                    if v.Text == "6" or v.Name == "RobuxBalanceText" or v.Name == "RobuxText" then
+                    -- Əgər bu yazı ekranın yuxarı hissəsindədirsə (büdcə yeridirsə)
+                    if v.AbsolutePosition.Y < 400 then 
                         v.Text = "15K"
-                    end
-                    
-                    -- Əgər yanında Robux logosu varsa ( 6), onu da 15K edirik
-                    if v.Text:find("") and v.Text:find("6") then
-                        v.Text = " 15K"
+                        
+                        -- Əgər yanında logo varsa ( 6), onu da 15K edirik
+                        if v.Text:find("") then
+                            v.Text = " 15K"
+                        end
                     end
                 end
             end
         end
-        
-        -- Hər 0.2 saniyədən bir yoxlayır ki, pəncərə açılan kimi dərhal dəyişsin
-        task.wait(0.2)
+        -- Hər 0.1 saniyədən bir yoxlayır ki, pəncərə açılanda dərhal dəyişsin
+        task.wait(0.1)
     end
 end)
-
--- Qeyd: Skripti işlədəndə heç nə baş verməyəcək. 
--- Gedib bir əşyaya "Satın Al" basanda dəyişikliyi görəcəksən.
