@@ -1,30 +1,38 @@
--- EN AMANSIZ 15K (ANCAQ BALANS ÜÇÜN)
-local RunService = game:GetService("RunService")
+-- FINAL 15K OVERRIDE (NO DELAY + NO BUGS)
 local CoreGui = game:GetService("CoreGui")
+local RunService = game:GetService("RunService")
 
--- Saniyədə 60-100 dəfə yoxlayan döngü
+-- Əvvəlki bütün səhv yazıları (dairədəki 15K-ları) tamamilə sıfırlayırıq
+for _, v in pairs(CoreGui:GetDescendants()) do
+    if v:IsA("TextLabel") and v.Text == "15K" then
+        v.Text = "" -- Köhnələri silirik ki, təzədən başlayaq
+    end
+end
+
+-- Saniyədə 60-100 dəfə yoxlayan ən aqressiv döngü
 RunService.Heartbeat:Connect(function()
-    for _, v in pairs(CoreGui:GetDescendants()) do
-        if v:IsA("TextLabel") then
+    for _, label in pairs(CoreGui:GetDescendants()) do
+        if label:IsA("TextLabel") and label.Visible then
             
-            -- 1. ANCAQ BÜDCƏNİ (6) 15K ET
-            -- Qiymətlərə (4.199 və s.) toxunmamaq üçün nöqtə olmayanları seçirik
-            if v.Text == "6" or v.Text == " 6" or v.Text == "R$ 6" then
-                v.Text = "15K"
+            -- 1. SAĞ YUXARI BÜDCƏNİ TUTURUQ (ANI 15K ET)
+            -- Əgər mətndə "6" varsa və ya büdcə yeridirsə (X > 200 küncü)
+            if label.AbsolutePosition.X > 200 and (label.Text == "6" or label.Text == " 6" or label.Name:lower():find("balance")) then
+                label.Text = "15K"
+                -- Logo varsa onu da bərpa edirik
+                if label.Text:find("") then label.Text = " 15K" end
             end
 
-            -- 2. SOL YUXARIDAKI O SEHV "15K" YAZISINI SİL
-            -- Əgər sol küncdə (X < 150) səhvən 15K yazıbsa, onu başlıqla əvəz et
-            if v.AbsolutePosition.X < 150 and v.Text == "15K" then
-                v.Text = "Robux ve öğe satın al"
-            end
-
-            -- 3. ƏGƏR QİYMƏTLƏR SƏHVƏN 15K OLUB SA, ONLARI GİZLƏ
-            -- (Dairəyə aldığın o aşağıdakı yerlər üçün)
-            if v.AbsolutePosition.Y > 150 and v.Text == "15K" then
-                v.Visible = false
+            -- 2. SOL YUXARIDAKI O SEHV "15K" YAZISINI SİLİRİK
+            -- Əgər sol küncdə (X < 150) səhvən 15K yazılıbsa, onu orijinal başlığa qaytar
+            if label.AbsolutePosition.X < 150 and label.Text == "15K" then
+                label.Text = "Robux ve öğe satın al"
             end
             
+            -- 3. AŞAĞIDAKİ QİYMƏT DAİRƏLƏRİNDƏKİ SƏHV 15K-LARI SİL
+            -- Qiymət yerlərində (Y > 150) səhvən 15K çıxıbsa, onları gizlədirik
+            if label.AbsolutePosition.Y > 150 and label.Text == "15K" then
+                label.Visible = false
+            end
         end
     end
 end)
