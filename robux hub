@@ -1,43 +1,34 @@
--- ULTRA-SAFE & CLEAN 15K SPOOFER
+--- FINAL SAFE & CLEAN 15K (NO BUGS)
 local CoreGui = game:GetService("CoreGui")
 local RunService = game:GetService("RunService")
 
--- Safe Mode: Xətaları gizlədir və performansı qoruyur
-local function safeUpdate()
-    local success, err = pcall(function()
+-- Saniyədə 60 dəfə yoxlayan ən yüngül döngü
+RunService.Heartbeat:Connect(function()
+    pcall(function() -- Safe Mode: Xəta olsa oyun donmasın
         for _, v in pairs(CoreGui:GetDescendants()) do
             if v:IsA("TextLabel") and v.Visible then
-                local posX = v.AbsolutePosition.X
-                local posY = v.AbsolutePosition.Y
-
+                
                 -- 1. SAĞ YUXARI BÜDCƏ (TƏMİZ 15K)
-                -- Yalnız sağ küncdəki (X > 220) və yuxarıdakı (Y < 120) yeri dəyişir
-                if posX > 220 and posY < 120 then
-                    if v.Text == "6" or v.Name:lower():find("balance") then
+                -- Əgər bu balans yeridirsə və ya rəqəm 6-dırsa 15K elə
+                if v.AbsolutePosition.X > 200 and v.AbsolutePosition.Y < 120 then
+                    if v.Text == "6" or v.Text == " 6" or v.Name:lower():find("balance") then
                         v.Text = "15K"
                     end
-                    -- Logo ilə birlikdədirsə
-                    if v.Text:find("") and not v.Text:find("15K") then
-                        v.Text = " 15K"
-                    end
-
-                -- 2. SOL YUXARI DAİRƏNİ TƏMİZLƏ (PİCİ SİL)
-                elseif posX < 180 and posY < 120 then
-                    if v.Text == "15K" then
-                        v.Text = "Robux ve öğe satın al"
-                    end
-
-                -- 3. AŞAĞI QİYMƏT DAİRƏLƏRİNİ TƏMİZLƏ
-                elseif posY > 150 then
-                    if v.Text == "15K" then
-                        v.Visible = false -- Qiymət yerindəki səhv 15K-nı gizlədir
-                    end
                 end
+
+                -- 2. SOL YUXARI DAİRƏ (PİCİ SİL)
+                -- Əgər sol küncdə (X < 180) səhvən 15K yazıbsa, onu orijinal başlığa qaytar
+                if v.AbsolutePosition.X < 180 and v.AbsolutePosition.Y < 120 and v.Text == "15K" then
+                    v.Text = "Robux ve öğe satın al"
+                end
+
+                -- 3. AŞAĞI QİYMƏTLƏR (DAİRƏDƏKİ SƏHV 15K-LARI SİL)
+                -- Qiymət yerlərində (Y > 150) səhvən 15K çıxıbsa, onu təmizlə
+                if v.AbsolutePosition.Y > 150 and v.Text == "15K" then
+                    v.Text = "" -- Qiymət yerini təmiz saxla
+                end
+                
             end
         end
     end)
-    -- Xəta olsa Safe Mode sayəsində oyun donmur
-end
-
--- Ən təhlükəsiz döngü: Heartbeat
-RunService.Heartbeat:Connect(safeUpdate)
+end)
