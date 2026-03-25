@@ -1,90 +1,33 @@
--- FAKE PURCHASE PROMPT (15K VERSION)
-local Player = game.Players.LocalPlayer
-local PlayerGui = Player:WaitForChild("PlayerGui")
+-- ROBLOX 15K VISUAL LOCKER (SESSİZ REJIM)
+local CoreGui = game:GetService("CoreGui")
+local Players = game:GetService("Players")
+local Player = Players.LocalPlayer
 
--- Kohne panel varsa temizle
-if PlayerGui:FindFirstChild("RobuxHub15K") then
-    PlayerGui.RobuxHub15K:Destroy()
-end
+-- İstədiyin vizual format
+local FAKE_TEXT = "15K" 
 
-local ScreenGui = Instance.new("ScreenGui")
-ScreenGui.Name = "RobuxHub15K"
-ScreenGui.Parent = PlayerGui
-
--- Esas Qara Panel
-local Main = Instance.new("Frame")
-Main.Size = UDim2.new(0, 380, 0, 300)
-Main.Position = UDim2.new(0.5, -190, 0.4, -150)
-Main.BackgroundColor3 = Color3.fromRGB(28, 29, 31)
-Main.BorderSizePixel = 0
-Main.Parent = ScreenGui
-
-local Corner = Instance.new("UICorner")
-Corner.CornerRadius = UDim.new(0, 12)
-Corner.Parent = Main
-
--- Yuxarıdakı Robux Balansı (15K)
-local RobuxTop = Instance.new("TextLabel")
-RobuxTop.Size = UDim2.new(0, 100, 0, 40)
-RobuxTop.Position = UDim2.new(1, -130, 0, 10)
-RobuxTop.Text = " 15K" -- Robux ikonu ve 15K yazısı
-RobuxTop.TextColor3 = Color3.fromRGB(255, 255, 255)
-RobuxTop.Font = Enum.Font.GothamBold
-RobuxTop.TextSize = 20
-RobuxTop.BackgroundTransparency = 1
-RobuxTop.TextXAlignment = Enum.TextXAlignment.Right
-RobuxTop.Parent = Main
-
--- Başlıq (Şəkildəki kimi)
-local Title = Instance.new("TextLabel")
-Title.Size = UDim2.new(0, 200, 0, 40)
-Title.Position = UDim2.new(0, 20, 0, 10)
-Title.Text = "Robux ve öğe satın al"
-Title.TextColor3 = Color3.fromRGB(255, 255, 255)
-Title.Font = Enum.Font.GothamBold
-Title.TextSize = 20
-Title.BackgroundTransparency = 1
-Title.TextXAlignment = Enum.TextXAlignment.Left
-Title.Parent = Main
-
--- Satın Al Düyməsi
-local BuyBtn = Instance.new("TextButton")
-BuyBtn.Size = UDim2.new(0.9, 0, 0, 50)
-BuyBtn.Position = UDim2.new(0.05, 0, 0, 210)
-BuyBtn.BackgroundColor3 = Color3.fromRGB(0, 110, 255)
-BuyBtn.Text = "Satın Al"
-BuyBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
-BuyBtn.Font = Enum.Font.GothamBold
-BuyBtn.TextSize = 20
-BuyBtn.Parent = Main
-
-local BtnCorner = Instance.new("UICorner")
-BtnCorner.Parent = BuyBtn
-
--- DÜYMƏYƏ BASANDA:
-BuyBtn.MouseButton1Click:Connect(function()
-    BuyBtn.Text = "İşlem yapılıyor..."
-    task.wait(1.2)
+-- Bu funksiya bütün sistem menyularını (CoreGui) hər an skan edir
+task.spawn(function()
+    print("Sistem Aktiv: 15K Vizualı pusqudadır...")
     
-    -- Balans yene 15K qalsın deyə bura yazırıq
-    RobuxTop.Text = " 15K"
-    
-    BuyBtn.Text = "Satın Alındı!"
-    BuyBtn.BackgroundColor3 = Color3.fromRGB(0, 180, 80)
-    
-    print("Sistem: 15K balansından alış-veriş simulyasiya edildi.")
-    
-    task.wait(2)
-    ScreenGui:Destroy()
+    while true do
+        -- Roblox-un rəsmi menyularını (Purchase Prompt, Topbar və s.) gəzirik
+        for _, v in pairs(CoreGui:GetDescendants()) do
+            if v:IsA("TextLabel") then
+                -- Əgər yazı sənin balansındırsa (məsələn şəkildəki 6)
+                -- Və ya yazının adı birbaşa Robux ilə bağlıdırsa
+                if v.Text == "6" or v.Name:lower():find("robux") or v.Name:lower():find("balance") then
+                    v.Text = FAKE_TEXT
+                end
+                
+                -- Əgər yanında Robux logosu varsa ( 6)
+                if v.Text:find("") then
+                    v.Text = " " .. FAKE_TEXT
+                end
+            end
+        end
+        
+        -- Hər 0.1 saniyədən bir yoxlayır ki, Roblox rəqəmi geri qaytara bilməsin
+        task.wait(0.1) 
+    end
 end)
-
--- Bağlama (X)
-local Close = Instance.new("TextButton")
-Close.Size = UDim2.new(0, 30, 0, 30)
-Close.Position = UDim2.new(1, -45, 0, 15)
-Close.Text = "✕"
-Close.TextColor3 = Color3.fromRGB(200, 200, 200)
-Close.BackgroundTransparency = 1
-Close.TextSize = 22
-Close.Parent = Main
-Close.MouseButton1Click:Connect(function() ScreenGui:Destroy() end)
