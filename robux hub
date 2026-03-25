@@ -1,36 +1,114 @@
--- Robux Visual Spoofer (Daha güclü versiya)
-local Players = game:GetService("Players")
-local CoreGui = game:GetService("CoreGui")
-local Player = Players.LocalPlayer
+-- FAKE PURCHASE PROMPT (ANIMASIYALI)
+local Player = game.Players.LocalPlayer
+local PlayerGui = Player:WaitForChild("PlayerGui")
 
--- Saxta miqdar
-local fakeAmount = "15,000"
-
--- Bütün yazıları yoxlayan və dəyişən funksiya
-local function updateRobux()
-    -- Həm oyunun içindəki, həm də Roblox-un rəsmi menyusundakı (CoreGui) elementlər
-    local allElements = {}
-    
-    -- CoreGui və PlayerGui-ni birləşdirib yoxlayırıq
-    for _, v in pairs(CoreGui:GetDescendants()) do table.insert(allElements, v) end
-    for _, v in pairs(Player:WaitForChild("PlayerGui"):GetDescendants()) do table.insert(allElements, v) end
-
-    for _, v in pairs(allElements) do
-        if v:IsA("TextLabel") or v:IsA("TextBox") or v:IsA("TextButton") then
-            -- Əgər yazı sənin hazırkı balansındırsa (məsələn 6)
-            if v.Text == "6" or v.Text == "R$ 6" or v.Name:lower():find("robux") then
-                v.Text = fakeAmount
-            end
-        end
-    end
+-- Kohne panel varsa sil
+if PlayerGui:FindFirstChild("FakePurchaseSystem") then
+    PlayerGui.FakePurchaseSystem:Destroy()
 end
 
--- Davamlı olaraq arxa fonda işləyir
-task.spawn(function()
-    while true do
-        updateRobux()
-        task.wait(0.1) -- Hər 0.1 saniyədən bir yoxlayır ki, rəqəm geri qayıtmasın
-    end
+local ScreenGui = Instance.new("ScreenGui")
+ScreenGui.Name = "FakePurchaseSystem"
+ScreenGui.Parent = PlayerGui
+
+-- Esas Panel
+local Main = Instance.new("Frame")
+Main.Size = UDim2.new(0, 380, 0, 320)
+Main.Position = UDim2.new(0.5, -190, 0.4, -160)
+Main.BackgroundColor3 = Color3.fromRGB(25, 26, 28)
+Main.BorderSizePixel = 0
+Main.Parent = ScreenGui
+
+local Corner = Instance.new("UICorner")
+Corner.CornerRadius = UDim.new(0, 15)
+Corner.Parent = Main
+
+-- Robux Balans (Yuxarida)
+local RobuxVal = 15000
+local RobuxTop = Instance.new("TextLabel")
+RobuxTop.Size = UDim2.new(0, 150, 0, 40)
+RobuxTop.Position = UDim2.new(1, -160, 0, 10)
+RobuxTop.Text = " " .. tostring(RobuxVal)
+RobuxTop.TextColor3 = Color3.fromRGB(255, 255, 255)
+RobuxTop.Font = Enum.Font.GothamBold
+RobuxTop.TextSize = 20
+RobuxTop.TextXAlignment = Enum.TextXAlignment.Right
+RobuxTop.BackgroundTransparency = 1
+RobuxTop.Parent = Main
+
+-- Eşya Şəkli (Şəkildəki Leprechaun Şans Bloğu üçün yer)
+local ItemImg = Instance.new("ImageLabel")
+ItemImg.Size = UDim2.new(0, 80, 0, 80)
+ItemImg.Position = UDim2.new(0, 20, 0, 60)
+ItemImg.Image = "rbxassetid://16824108846" -- Nümunə bir ikon
+ItemImg.BackgroundTransparency = 1
+ItemImg.Parent = Main
+
+-- Eşya Adı
+local ItemName = Instance.new("TextLabel")
+ItemName.Size = UDim2.new(0, 250, 0, 30)
+ItemName.Position = UDim2.new(0, 110, 0, 70)
+ItemName.Text = "Premium Leprechaun Şans Bloğu"
+ItemName.TextColor3 = Color3.fromRGB(255, 255, 255)
+ItemName.Font = Enum.Font.GothamBold
+ItemName.TextSize = 16
+ItemName.TextXAlignment = Enum.TextXAlignment.Left
+ItemName.BackgroundTransparency = 1
+ItemName.Parent = Main
+
+-- Qiymət
+local Price = Instance.new("TextLabel")
+Price.Size = UDim2.new(0, 100, 0, 30)
+Price.Position = UDim2.new(0, 110, 0, 100)
+Price.Text = " 649"
+Price.TextColor3 = Color3.fromRGB(200, 200, 200)
+Price.Font = Enum.Font.Gotham
+Price.TextSize = 18
+Price.TextXAlignment = Enum.TextXAlignment.Left
+Price.BackgroundTransparency = 1
+Price.Parent = Main
+
+-- Satın Al Düyməsi
+local BuyBtn = Instance.new("TextButton")
+BuyBtn.Size = UDim2.new(0.9, 0, 0, 50)
+BuyBtn.Position = UDim2.new(0.05, 0, 0, 230)
+BuyBtn.BackgroundColor3 = Color3.fromRGB(0, 120, 255)
+BuyBtn.Text = "Satın Al"
+BuyBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+BuyBtn.Font = Enum.Font.GothamBold
+BuyBtn.TextSize = 20
+BuyBtn.Parent = Main
+
+local BtnCorner = Instance.new("UICorner")
+BtnCorner.Parent = BuyBtn
+
+-- DÜYMƏYƏ BASANDA BAŞ VERƏNLƏR:
+BuyBtn.MouseButton1Click:Connect(function()
+    BuyBtn.Text = "İşlem yapılıyor..."
+    BuyBtn.AutoButtonColor = false
+    task.wait(1.5)
+    
+    -- Balansı azaldırıq (Vizual olaraq)
+    RobuxVal = RobuxVal - 649
+    RobuxTop.Text = " " .. tostring(RobuxVal)
+    
+    -- Uğurlu Mesajı
+    BuyBtn.Text = "Satın Alındı!"
+    BuyBtn.BackgroundColor3 = Color3.fromRGB(0, 200, 100)
+    
+    print("Sistem: 649 Robux uğurla xərcləndi (Local)")
+    
+    task.wait(2)
+    ScreenGui:Destroy() -- Pəncərə bağlanır
 end)
 
-print("Robux Vizualı 15k olaraq məcburi şəkildə aktiv edildi!")
+-- Bağlama Düyməsi (X)
+local Close = Instance.new("TextButton")
+Close.Size = UDim2.new(0, 30, 0, 30)
+Close.Position = UDim2.new(1, -40, 0, 15)
+Close.Text = "X"
+Close.TextColor3 = Color3.fromRGB(150, 150, 150)
+Close.BackgroundTransparency = 1
+Close.TextSize = 20
+Close.Parent = Main
+Close.MouseButton1Click:Connect(function() ScreenGui:Destroy() end)
