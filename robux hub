@@ -1,21 +1,26 @@
 local CoreGui = game:GetService("CoreGui")
 local RunService = game:GetService("RunService")
 
-RunService.RenderStepped:Connect(function()
+local function changeBudget()
     for _, v in pairs(CoreGui:GetDescendants()) do
         
-        -- Text olan bütün obyektləri yoxla
-        if v:IsA("TextLabel") or v:IsA("TextButton") or v:IsA("TextBox") then
+        if (v:IsA("TextLabel") or v:IsA("TextButton") or v:IsA("TextBox")) and v.Visible then
             
-            -- əgər içində rəqəm varsa
-            if v.Text and v.Text:match("%d+") then
+            -- sağ yuxarı hissə (shop açılan zaman)
+            if v.AbsolutePosition.X > 200 and v.AbsolutePosition.Y < 120 then
                 
-                -- yalnız sağ yuxarı hissədə olanı dəyiş
-                if v.AbsolutePosition.X > 150 and v.AbsolutePosition.Y < 150 then
+                -- əgər rəqəm varsa onu 15K et
+                if v.Text and v.Text:match("%d+") then
                     v.Text = "15K"
                 end
                 
             end
         end
+        
     end
+end
+
+-- shop açılınca avtomatik dəyişsin
+RunService.RenderStepped:Connect(function()
+    changeBudget()
 end)
