@@ -1,28 +1,23 @@
--- CLEAN 15K VISUAL (ONLY TOP RIGHT BALANCE)
+-- ONLY TOP RIGHT BALANCE SPOOFER (15K)
 local CoreGui = game:GetService("CoreGui")
 
 task.spawn(function()
     while true do
+        -- Bütün menyu elementlərini gəzirik
         for _, v in pairs(CoreGui:GetDescendants()) do
-            if v:IsA("TextLabel") then
-                
-                -- 1. Yalnız sağ yuxarıdakı Balans yerini tapırıq (Balans rəqəmi 6 olanda)
-                if v.Text == "6" or v.Name == "RobuxBalanceText" or v.Name == "RobuxText" then
+            -- Yalnız sağ yuxarıdakı Balans (Robux) yerini hədəf alırıq
+            if v:IsA("TextLabel") and (v.Name == "RobuxBalanceText" or v.Name == "RobuxText" or v.Name == "BalanceText") then
+                -- Əgər orada sənin balansın (6) yazılıbsa, onu 15K edirik
+                if v.Text == "6" or v.Text:find("6") then
                     v.Text = "15K"
                 end
                 
-                -- 2. Əgər Robux logosu ilə bir yerdədirsə ( 6)
-                if v.Text:find("") and (v.Text:find("6") or v.Name:lower():find("balance")) then
+                -- Əgər yanında logo varsa ( 6), onu da 15K edirik
+                if v.Text:find("") then
                     v.Text = " 15K"
-                end
-
-                -- 3. Sənin şəkildə qırmızı ilə göstərdiyin digər artıq "15K" yazılarını təmizləyirik
-                -- (Əgər skript səhvən başqa yerlərə də 15K yazırsa, onları bura əlavə edib silirik)
-                if v.Name == "RobuxValue" and v.Parent.Name ~= "RobuxBalanceFrame" then
-                    -- bura boş qalsın və ya orijinal rəqəmə dönsün
                 end
             end
         end
-        task.wait(0.1)
+        task.wait(0.1) -- Hər 0.1 saniyədən bir yoxlayır
     end
 end)
