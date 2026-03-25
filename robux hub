@@ -1,30 +1,38 @@
--- FINAL 15K SPOOFER (ONLY ON PURCHASE PROMPT)
+-- ULTRA-FAST CLEAN 15K SPOOFER
 local CoreGui = game:GetService("CoreGui")
+local RunService = game:GetService("RunService")
 
--- Bu funksiya arxa fonda pusquda durur
-task.spawn(function()
-    while true do
-        -- Roblox-un rəsmi interfeysində bütün yazıları gəzirik
-        for _, v in pairs(CoreGui:GetDescendants()) do
-            if v:IsA("TextLabel") then
+-- Hər kadrda (saniyədə 60+ dəfə) yoxlayan döngü
+RunService.RenderStepped:Connect(function()
+    local descendants = CoreGui:GetDescendants()
+    
+    for _, v in pairs(descendants) do
+        if v:IsA("TextLabel") then
+            
+            -- 1. SOL YUXARIDAKI ARTIQ YAZINI SİL (Təmizləmə)
+            -- Əgər yazı ekranın sol tərəfindədirsə və 15K-dırsa, onu gizlət
+            if v.AbsolutePosition.X < 150 and v.Text == "15K" then
+                v.Visible = false
+            end
+
+            -- 2. SAĞ YUXARI BÜDCƏ (Məcburi 15K)
+            -- Yalnız sağ tərəfdəki büdcə yerini hədəf alırıq
+            if v.AbsolutePosition.X > 200 and v.AbsolutePosition.Y < 100 then
+                -- Əgər orada orijinal balansın (6) və ya hər hansı rəqəm varsa
+                if v.Text == "6" or v.Name:lower():find("robux") or v.Name:lower():find("balance") then
+                    v.Text = "15K"
+                end
                 
-                -- Şəkildəki o sağ yuxarıdakı büdcə yerini tapırıq
-                -- Yalnız mətni "6" olan və ya balansla bağlı olan yazıları hədəf alırıq
-                if (v.Text == "6" or v.Name:lower():find("robux") or v.Name:lower():find("balance")) then
-                    
-                    -- Əgər bu yazı ekranın yuxarı hissəsindədirsə (büdcə yeridirsə)
-                    if v.AbsolutePosition.Y < 400 then 
-                        v.Text = "15K"
-                        
-                        -- Əgər yanında logo varsa ( 6), onu da 15K edirik
-                        if v.Text:find("") then
-                            v.Text = " 15K"
-                        end
-                    end
+                -- Robux logosu ilə bir yerdədirsə ( 15K)
+                if v.Text:find("") and not v.Text:find("15K") then
+                    v.Text = " 15K"
                 end
             end
+            
+            -- 3. Əgər pəncərənin başlığında (Header) səhvən 15K çıxıbsa
+            if v.Name == "HeaderText" and v.Text == "15K" then
+                v.Text = "Robux ve öğe satın al" -- Orijinal başlığı geri qaytar
+            end
         end
-        -- Hər 0.1 saniyədən bir yoxlayır ki, pəncərə açılanda dərhal dəyişsin
-        task.wait(0.1)
     end
 end)
